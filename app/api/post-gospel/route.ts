@@ -3,26 +3,32 @@ import axios from "axios";
 
 export async function GET() {
   try {
-    const token = process.env.INSTAGRAM_ACCESS_TOKEN!;
+    const IG_USER_ID =
+      process.env.INSTAGRAM_BUSINESS_ACCOUNT_ID;
+
+    const IG_TOKEN =
+      process.env.INSTAGRAM_ACCESS_TOKEN;
 
     const response = await axios.get(
-      "https://graph.facebook.com/v23.0/debug_token",
+      `https://graph.facebook.com/v23.0/${IG_USER_ID}`,
       {
         params: {
-          input_token: token,
-          access_token: token,
+          fields: "id,username",
+          access_token: IG_TOKEN,
         },
       }
     );
 
     return NextResponse.json({
       success: true,
-      data: response.data,
+      instagram: response.data,
     });
   } catch (error: any) {
     return NextResponse.json({
       success: false,
-      error: error?.response?.data || error.message,
+      error:
+        error?.response?.data ||
+        error.message,
     });
   }
 }
