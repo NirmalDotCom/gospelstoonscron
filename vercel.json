@@ -1,0 +1,9 @@
+{
+  "buildCommand": "npm run build",
+  "crons": [
+    {
+      "path": "/api/post-gospel",
+      "schedule": "30 21 * * *"
+    }
+  ]
+}
