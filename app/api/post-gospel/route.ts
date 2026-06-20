@@ -55,7 +55,10 @@ export async function GET() {
       throw new Error("Images missing in latest-gospel.json");
     }
 
-    const IG_USER_ID = process.env.INSTAGRAM_BUSINESS_ACCOUNT_ID;
+    return NextResponse.json({
+      IG_USER_ID: process.env.INSTAGRAM_BUSINESS_ACCOUNT_ID,
+      tokenExists: !!process.env.INSTAGRAM_ACCESS_TOKEN
+    });
     const IG_TOKEN = process.env.INSTAGRAM_ACCESS_TOKEN;
 
     if (!IG_USER_ID || !IG_TOKEN) {
