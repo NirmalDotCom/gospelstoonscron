@@ -1,11 +1,28 @@
 import { NextResponse } from "next/server";
+import axios from "axios";
 
 export async function GET() {
-  const token = process.env.INSTAGRAM_ACCESS_TOKEN || "";
+  try {
+    const token = process.env.INSTAGRAM_ACCESS_TOKEN!;
 
-  return NextResponse.json({
-    tokenLength: token.length,
-    first20: token.substring(0, 20),
-    last20: token.substring(token.length - 20),
-  });
+    const response = await axios.get(
+      "https://graph.facebook.com/v23.0/debug_token",
+      {
+        params: {
+          input_token: token,
+          access_token: token,
+        },
+      }
+    );
+
+    return NextResponse.json({
+      success: true,
+      data: response.data,
+    });
+  } catch (error: any) {
+    return NextResponse.json({
+      success: false,
+      error: error?.response?.data || error.message,
+    });
+  }
 }
