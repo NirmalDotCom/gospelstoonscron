@@ -1,36 +1,30 @@
-
 import { NextResponse } from "next/server";
+import fs from "fs";
+import path from "path";
 
 export async function GET() {
   try {
-    const response = await fetch(
-      "http://localhost:3000/latest-gospel.json",
-      {
-        cache: "no-store",
-      }
+    const filePath = path.join(
+      process.cwd(),
+      "public",
+      "latest-gospel.json"
     );
 
-    const data = await response.json();
-
-    const englishImage = data.english;
-    const tamilImage = data.tamil;
-    const date = data.date;
+    const fileContent = fs.readFileSync(filePath, "utf8");
+    const data = JSON.parse(fileContent);
 
     return NextResponse.json({
       success: true,
-      date,
-      englishImage,
-      tamilImage,
+      date: data.date,
+      englishImage: data.english,
+      tamilImage: data.tamil,
       geminiConfigured: !!process.env.GEMINI_API_KEY,
       instagramConfigured: !!process.env.INSTAGRAM_ACCESS_TOKEN,
     });
-  } catch (error) {
-    return NextResponse.json(
-      {
-        success: false,
-        error: String(error),
-      },
-      { status: 500 }
-    );
+  } catch (error: any) {
+    return NextResponse.json({
+      success: false,
+      error: error.message,
+    });
   }
 }
